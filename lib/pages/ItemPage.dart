@@ -4,10 +4,8 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class ItemPage extends StatelessWidget {
   final String imagePath; // Câmp pentru a stoca calea imaginii produsului
-
   // Constructor care acceptă imagePath ca parametru
   ItemPage({required this.imagePath});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -198,7 +196,9 @@ class ItemPage extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: ItemBottomNavBar(),
+      bottomNavigationBar: ItemBottomNavBar(
+        item: {},
+      ),
     );
   }
 }

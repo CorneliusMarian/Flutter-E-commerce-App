@@ -8,7 +8,6 @@ class AllItemsWidget extends StatelessWidget {
     // Obtain the screen width and height for responsive sizing
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-
     return GridView.count(
       crossAxisCount:
           width > 600 ? 4 : 2, // Adjust column count based on screen width

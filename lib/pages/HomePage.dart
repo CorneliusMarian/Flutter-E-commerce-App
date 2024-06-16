@@ -1,15 +1,95 @@
 import 'dart:io';
-
+import 'package:ecommerce_app/widgets/CartProvider.dart';
+import 'package:flutter/material.dart';
+import 'package:badges/badges.dart' as badges;
+import 'package:provider/provider.dart';
 import 'package:ecommerce_app/widgets/AllItemsWidget.dart';
 import 'package:ecommerce_app/widgets/HomeBottomNavBar.dart';
 import 'package:ecommerce_app/widgets/RowItemsWidget.dart';
-import 'package:flutter/material.dart';
-import 'package:badges/badges.dart' as badges;
 
 class HomePage extends StatelessWidget {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(
+                'Menu',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.home),
+              title: Text('Home'),
+              onTap: () {
+                Navigator.pop(context); // Închide drawer-ul
+                Navigator.pushNamed(context, "homePage");
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.person),
+              title: Text('Profile'),
+              onTap: () {
+                Navigator.pop(context); // Închide drawer-ul
+              },
+            ),
+            ExpansionTile(
+              leading: Icon(Icons.category),
+              title: Text('Categorii'),
+              children: <Widget>[
+                ListTile(
+                  title: Text('Barbati'),
+                  onTap: () {
+                    Navigator.pop(context); // Închide drawer-ul
+                    // Navighează la pagina corespunzătoare
+                  },
+                ),
+                ListTile(
+                  title: Text('Femei'),
+                  onTap: () {
+                    Navigator.pop(context); // Închide drawer-ul
+                    // Navighează la pagina corespunzătoare
+                  },
+                ),
+                ListTile(
+                  title: Text('Copii'),
+                  onTap: () {
+                    Navigator.pop(context); // Închide drawer-ul
+                    // Navighează la pagina corespunzătoare
+                  },
+                ),
+              ],
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Settings'),
+              onTap: () {
+                Navigator.pop(context); // Închide drawer-ul
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text('Logout'),
+              onTap: () {
+                Navigator.pop(context); // Închide drawer-ul
+                Navigator.pushNamed(context, "/");
+              },
+            ),
+          ],
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -20,23 +100,28 @@ class HomePage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Color(0xFF5F9FD),
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color(0xFF475269).withOpacity(0.3),
-                            blurRadius: 5,
-                            spreadRadius: 1,
-                          ),
-                        ],
-                      ),
-                      child: Icon(
-                        Icons.sort,
-                        size: 30,
-                        color: Color(0xFF475269),
+                    GestureDetector(
+                      onTap: () {
+                        _scaffoldKey.currentState?.openDrawer();
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Color(0xFF5F9FD),
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color(0xFF475269).withOpacity(0.3),
+                              blurRadius: 5,
+                              spreadRadius: 1,
+                            ),
+                          ],
+                        ),
+                        child: Icon(
+                          Icons.sort,
+                          size: 30,
+                          color: Color(0xFF475269),
+                        ),
                       ),
                     ),
                     Container(
@@ -53,10 +138,8 @@ class HomePage extends StatelessWidget {
                         ],
                       ),
                       child: badges.Badge(
-                        // badgeColor: Colors.redAccent,
-                        // padding: EdgeInsets.all(7),
                         badgeContent: Text(
-                          "3",
+                          "${Provider.of<CartProvider>(context).itemCount}",
                           style: TextStyle(
                             color: Colors.white,
                           ),
@@ -95,7 +178,6 @@ class HomePage extends StatelessWidget {
                 child: Row(
                   children: [
                     Container(
-                      //margin: EdgeInsets.only(left: 5),
                       width: 300,
                       child: TextFormField(
                         decoration: InputDecoration(

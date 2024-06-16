@@ -1,9 +1,15 @@
 import 'package:ecommerce_app/widgets/BottomCartSheet.dart';
+import 'package:ecommerce_app/widgets/CartProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:wtf_sliding_sheet/wtf_sliding_sheet.dart';
 
 class ItemBottomNavBar extends StatelessWidget {
+  final Map<String, dynamic> item;
+
+  ItemBottomNavBar({required this.item});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -12,36 +18,41 @@ class ItemBottomNavBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-            decoration: BoxDecoration(
-              color: Color(0xFF475269),
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Color(0xFF475269).withOpacity(0.3),
-                  blurRadius: 5,
-                  spreadRadius: 1,
-                ),
-              ],
-            ),
-            child: Row(
-              children: [
-                Text(
-                  "Add To Cart",
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
+          GestureDetector(
+            onTap: () {
+              Provider.of<CartProvider>(context, listen: false).addItem(item);
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+              decoration: BoxDecoration(
+                color: Color(0xFF475269),
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(0xFF475269).withOpacity(0.3),
+                    blurRadius: 5,
+                    spreadRadius: 1,
                   ),
-                ),
-                SizedBox(width: 10),
-                Icon(
-                  CupertinoIcons.cart_badge_plus,
-                  color: Colors.white,
-                  size: 32,
-                ),
-              ],
+                ],
+              ),
+              child: Row(
+                children: [
+                  Text(
+                    "Add To Cart",
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Icon(
+                    CupertinoIcons.cart_badge_plus,
+                    color: Colors.white,
+                    size: 32,
+                  ),
+                ],
+              ),
             ),
           ),
           Container(
@@ -61,11 +72,12 @@ class ItemBottomNavBar extends StatelessWidget {
               onTap: () {
                 showSlidingBottomSheet(context, builder: (context) {
                   return SlidingSheetDialog(
-                      elevation: 8,
-                      cornerRadius: 16,
-                      builder: (context, state) {
-                        return BottomCartSheet();
-                      });
+                    elevation: 8,
+                    cornerRadius: 16,
+                    builder: (context, state) {
+                      return BottomCartSheet();
+                    },
+                  );
                 });
               },
               child: Icon(

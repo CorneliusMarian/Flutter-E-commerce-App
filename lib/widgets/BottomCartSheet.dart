@@ -1,9 +1,13 @@
+import 'package:ecommerce_app/widgets/CartProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class BottomCartSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final cart = Provider.of<CartProvider>(context);
+
     return Material(
       child: Container(
         height: 600,
@@ -17,7 +21,7 @@ class BottomCartSheet extends StatelessWidget {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    for (int i = 1; i < 3; i++)
+                    for (int i = 0; i < cart.items.length; i++)
                       Container(
                         margin:
                             EdgeInsets.symmetric(vertical: 10, horizontal: 15),
@@ -52,8 +56,8 @@ class BottomCartSheet extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
-                                  Image.asset(
-                                    "images/$i.png",
+                                  Image.network(
+                                    cart.items[i]['image_url'],
                                     height: 130,
                                     width: 130,
                                     fit: BoxFit.contain,
@@ -69,7 +73,7 @@ class BottomCartSheet extends StatelessWidget {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    "Nike Shoe",
+                                    cart.items[i]['name'],
                                     style: TextStyle(
                                       color: Color(0xFF475269),
                                       fontSize: 23,
@@ -102,7 +106,7 @@ class BottomCartSheet extends StatelessWidget {
                                         margin: EdgeInsets.symmetric(
                                             horizontal: 10),
                                         child: Text(
-                                          "02",
+                                          "01",
                                           style: TextStyle(
                                             color: Color(0xFF475269),
                                             fontSize: 18,
@@ -154,15 +158,20 @@ class BottomCartSheet extends StatelessWidget {
                                         ),
                                       ],
                                     ),
-                                    child: Icon(
-                                      Icons.delete,
-                                      color: Colors.red,
-                                      size: 20,
+                                    child: IconButton(
+                                      icon: Icon(
+                                        Icons.delete,
+                                        color: Colors.red,
+                                        size: 20,
+                                      ),
+                                      onPressed: () {
+                                        cart.removeItem(i);
+                                      },
                                     ),
                                   ),
                                   Spacer(),
                                   Text(
-                                    "\$50",
+                                    "\$${cart.items[i]['price']}",
                                     style: TextStyle(
                                       color: Color(0xFF475269),
                                       fontSize: 20,
@@ -230,7 +239,7 @@ class BottomCartSheet extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                "\$100",
+                                "\$${cart.totalPrice}",
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
@@ -304,7 +313,7 @@ class BottomCartSheet extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "\$110",
+                        "\$${cart.totalPrice + 10}", // Total + delivery fee - discount
                         style: TextStyle(
                           fontSize: 22,
                           color: Colors.redAccent,
