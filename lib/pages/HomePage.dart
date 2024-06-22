@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:ecommerce_app/widgets/AllItemsWidget.dart';
 import 'package:ecommerce_app/widgets/HomeBottomNavBar.dart';
 import 'package:ecommerce_app/widgets/RowItemsWidget.dart';
+import 'package:ecommerce_app/providers/products_provider.dart';
+import 'package:auto_size_text/auto_size_text.dart'; // Adăugat
 
 class HomePage extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -158,7 +160,6 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
               ),
-
               SizedBox(height: 15),
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 15),

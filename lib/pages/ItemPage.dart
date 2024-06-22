@@ -3,9 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class ItemPage extends StatelessWidget {
-  final String imagePath; // Câmp pentru a stoca calea imaginii produsului
-  // Constructor care acceptă imagePath ca parametru
-  ItemPage({required this.imagePath});
+  final String imagePath;
+  final String productName;
+  final String productDescription;
+  final double productPrice;
+
+  ItemPage({
+    required this.imagePath,
+    required this.productName,
+    required this.productDescription,
+    required this.productPrice,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,11 +79,19 @@ class ItemPage extends StatelessWidget {
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    Image.asset(
+                    Image.network(
                       imagePath, // Folosește calea imaginii transmisă prin constructor
                       height: 350,
                       width: 350,
                       fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.network(
+                          'https://via.placeholder.com/150',
+                          height: 350,
+                          width: 350,
+                          fit: BoxFit.contain,
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -103,7 +120,7 @@ class ItemPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "New Nike Shoe",
+                          productName,
                           style: TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
@@ -111,7 +128,7 @@ class ItemPage extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "\$55",
+                          "\$$productPrice",
                           style: TextStyle(
                             fontSize: 25,
                             fontWeight: FontWeight.w500,
@@ -139,7 +156,7 @@ class ItemPage extends StatelessWidget {
                     ),
                     SizedBox(height: 10),
                     Text(
-                      "This is description of the shoe product.",
+                      productDescription,
                       style: TextStyle(
                         color: Color(0xFF475269),
                         fontSize: 17,
@@ -197,7 +214,12 @@ class ItemPage extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: ItemBottomNavBar(
-        item: {},
+        item: {
+          'name': productName,
+          'description': productDescription,
+          'price': productPrice,
+          'image_url': imagePath,
+        },
       ),
     );
   }

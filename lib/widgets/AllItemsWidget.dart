@@ -1,89 +1,137 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ecommerce_app/pages/ItemPage.dart'; // Asigură-te că adaugi importul corect pentru ItemPage
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ecommerce_app/pages/ItemPage.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class AllItemsWidget extends StatelessWidget {
+  final CollectionReference _productsCollection =
+      FirebaseFirestore.instance.collection('Products');
+
   @override
   Widget build(BuildContext context) {
-    // Obtain the screen width and height for responsive sizing
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
-    return GridView.count(
-      crossAxisCount:
-          width > 600 ? 4 : 2, // Adjust column count based on screen width
-      childAspectRatio: (width / height) > 0.75 ? 0.75 : 0.68,
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      children: [
-        for (int i = 1; i <= 4; i++)
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ItemPage(
-                      imagePath: "images/$i.png"), // Transmite calea imaginii
-                ),
-              );
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                  horizontal: width * 0.03, vertical: height * 0.01),
-              margin: EdgeInsets.all(width * 0.02),
-              decoration: BoxDecoration(
-                color: Color(0xFFF5F9FD),
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: Color(0xFF475269).withOpacity(0.3),
-                    blurRadius: 5,
-                    spreadRadius: 1,
-                  ),
-                ],
-              ),
-              child: LayoutBuilder(
-                // Use LayoutBuilder to calculate the size constraints
-                builder: (context, constraints) {
-                  return Column(
-                    mainAxisSize:
-                        MainAxisSize.min, // Use min size that children need
-                    children: [
-                      Expanded(
-                        child: Image.asset(
-                          "images/$i.png",
-                          fit: BoxFit.contain, // Adjust the fit
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 8),
-                        child: Text(
-                          "Nike Shoe",
-                          style: TextStyle(
-                            fontSize: width *
-                                0.05, // Scale font size with screen width
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF475269),
-                          ),
-                          overflow:
-                              TextOverflow.ellipsis, // Prevent text overflow
-                        ),
-                      ),
-                      Text(
-                        "New Nike Shoe for Men",
-                        style: TextStyle(
-                          fontSize: width * 0.035, // Smaller font size
-                          color: Color(0xFF475269).withOpacity(0.7),
-                        ),
-                        overflow:
-                            TextOverflow.ellipsis, // Prevent text overflow
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
+    return FutureBuilder<QuerySnapshot>(
+      future: _productsCollection.limit(4).get(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text('Error loading products'));
+        }
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return Center(child: Text('No products available'));
+        }
+
+        final products = snapshot.data!.docs;
+
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 0.75,
           ),
-      ],
+          itemCount: products.length,
+          itemBuilder: (context, index) {
+            final product = products[index];
+            final imageUrl = product['image_url']?.isNotEmpty == true
+                ? product['image_url']
+                : 'https://via.placeholder.com/150';
+
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ItemPage(
+                      imagePath: imageUrl,
+                      productName: product['name'] ?? 'No Name',
+                      productDescription:
+                          product['description'] ?? 'No description available',
+                      productPrice: product['price']?.toDouble() ?? 0.0,
+                    ),
+                  ),
+                );
+              },
+              child: Container(
+                margin: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Color(0xFFF5F9FD),
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color(0xFF475269).withOpacity(0.3),
+                      blurRadius: 5,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.network(
+                        imageUrl,
+                        height: 120,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Image.network(
+                            'https://via.placeholder.com/150',
+                            height: 120,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          );
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: AutoSizeText(
+                        product['name'] ?? 'No Name',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF475269),
+                        ),
+                        maxLines: 1,
+                        minFontSize: 12,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: AutoSizeText(
+                        product['description'] ?? 'No description available',
+                        maxLines: 2,
+                        minFontSize: 12,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Color(0xFF475269),
+                        ),
+                      ),
+                    ),
+                    Spacer(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        '\$${product['price']?.toDouble() ?? 0.0}',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.redAccent,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

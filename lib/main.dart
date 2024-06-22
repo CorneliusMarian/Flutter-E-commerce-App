@@ -47,7 +47,13 @@ class MyApp extends StatelessWidget {
         if (settings.name == 'itemPage') {
           final args = settings.arguments as Map<String, dynamic>;
           return MaterialPageRoute(
-            builder: (context) => ItemPage(imagePath: args['images/1.png']),
+            builder: (context) => ItemPage(
+              imagePath: args['imagePath'] ?? 'https://via.placeholder.com/150',
+              productName: args['productName'] ?? 'No Name',
+              productDescription:
+                  args['productDescription'] ?? 'No description available',
+              productPrice: args['productPrice'] ?? 0.0,
+            ),
           );
         }
         return null;

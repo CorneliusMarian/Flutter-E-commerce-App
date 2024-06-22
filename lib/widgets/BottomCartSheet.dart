@@ -2,6 +2,7 @@ import 'package:ecommerce_app/widgets/CartProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class BottomCartSheet extends StatelessWidget {
   @override
@@ -46,7 +47,6 @@ class BottomCartSheet extends StatelessWidget {
                                     arguments: {
                                       'imagePath':
                                           cart.items[i]['image_url'] ?? '',
-                                      // add other required arguments here
                                     });
                               },
                               child: Stack(
@@ -71,89 +71,102 @@ class BottomCartSheet extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(vertical: 30),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    cart.items[i]['name'] ?? 'No Name',
-                                    style: TextStyle(
-                                      color: Color(0xFF475269),
-                                      fontSize: 23,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  Row(
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.all(5),
-                                        decoration: BoxDecoration(
-                                          color: Color(0xFFF5F9FD),
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Color(0xFF475269)
-                                                  .withOpacity(0.3),
-                                              blurRadius: 5,
-                                              spreadRadius: 1,
-                                            ),
-                                          ],
-                                        ),
-                                        child: Icon(
-                                          CupertinoIcons.minus,
-                                          size: 18,
-                                        ),
+                            Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 30),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    AutoSizeText(
+                                      cart.items[i]['name'] ?? 'No Name',
+                                      style: TextStyle(
+                                        color: Color(0xFF475269),
+                                        fontSize: 23,
+                                        fontWeight: FontWeight.w500,
                                       ),
-                                      Container(
-                                        margin: EdgeInsets.symmetric(
-                                            horizontal: 10),
-                                        child: Text(
-                                          cart.items[i]['quantity']
-                                                  .toString() ??
-                                              '0',
-                                          style: TextStyle(
-                                            color: Color(0xFF475269),
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w500,
+                                      maxLines: 1,
+                                      minFontSize: 16,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    Row(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            cart.decreaseItemQuantity(i);
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.all(5),
+                                            decoration: BoxDecoration(
+                                              color: Color(0xFFF5F9FD),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Color(0xFF475269)
+                                                      .withOpacity(0.3),
+                                                  blurRadius: 5,
+                                                  spreadRadius: 1,
+                                                ),
+                                              ],
+                                            ),
+                                            child: Icon(
+                                              CupertinoIcons.minus,
+                                              size: 18,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.all(5),
-                                        decoration: BoxDecoration(
-                                          color: Color(0xFFF5F9FD),
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Color(0xFF475269)
-                                                  .withOpacity(0.3),
-                                              blurRadius: 5,
-                                              spreadRadius: 1,
+                                        Container(
+                                          margin: EdgeInsets.symmetric(
+                                              horizontal: 10),
+                                          child: Text(
+                                            cart.items[i]['quantity']
+                                                .toString(),
+                                            style: TextStyle(
+                                              color: Color(0xFF475269),
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w500,
                                             ),
-                                          ],
+                                          ),
                                         ),
-                                        child: Icon(
-                                          CupertinoIcons.add,
-                                          size: 18,
+                                        GestureDetector(
+                                          onTap: () {
+                                            cart.increaseItemQuantity(i);
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.all(5),
+                                            decoration: BoxDecoration(
+                                              color: Color(0xFFF5F9FD),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Color(0xFF475269)
+                                                      .withOpacity(0.3),
+                                                  blurRadius: 5,
+                                                  spreadRadius: 1,
+                                                ),
+                                              ],
+                                            ),
+                                            child: Icon(
+                                              CupertinoIcons.add,
+                                              size: 18,
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                            Spacer(),
                             Padding(
                               padding: EdgeInsets.symmetric(vertical: 25),
                               child: Column(
                                 children: [
                                   Container(
-                                    padding: EdgeInsets.all(8),
+                                    padding: EdgeInsets.all(5),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(10),
@@ -170,7 +183,7 @@ class BottomCartSheet extends StatelessWidget {
                                       icon: Icon(
                                         Icons.delete,
                                         color: Colors.red,
-                                        size: 20,
+                                        size: 18,
                                       ),
                                       onPressed: () {
                                         cart.removeItem(i);
