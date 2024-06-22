@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 class ProductsProvider {
-  final CollectionReference products =
+  final CollectionReference productsCollection =
       FirebaseFirestore.instance.collection('Products');
 
   Future<void> addProduct({
-    required String productId,
     required String categoryId,
     required String name,
     required String description,
@@ -14,25 +12,18 @@ class ProductsProvider {
     required double price,
     required int stock,
   }) async {
-    await products
-        .add({
-          'product_id': productId,
-          'category_id': categoryId,
-          'name': name,
-          'description': description,
-          'image_url': imageUrl,
-          'price': price,
-          'stock': stock,
-        })
-        .then((value) => print("Product Added"))
-        .catchError((error) => print("Failed to add product: $error"));
+    await productsCollection.add({
+      'category_id': categoryId,
+      'name': name,
+      'description': description,
+      'image_url': imageUrl,
+      'price': price,
+      'stock': stock,
+    });
   }
 
-  Future<List<String>> getImagesFromStorage(String path) async {
-    final ListResult result =
-        await FirebaseStorage.instance.ref(path).listAll();
-    final List<String> urls = await Future.wait(
-        result.items.map((Reference ref) => ref.getDownloadURL()).toList());
-    return urls;
+  Future<List<QueryDocumentSnapshot>> getProducts() async {
+    QuerySnapshot querySnapshot = await productsCollection.get();
+    return querySnapshot.docs;
   }
 }

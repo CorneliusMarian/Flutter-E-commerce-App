@@ -42,7 +42,12 @@ class BottomCartSheet extends StatelessWidget {
                           children: [
                             InkWell(
                               onTap: () {
-                                Navigator.pushNamed(context, "itemPage");
+                                Navigator.pushNamed(context, "itemPage",
+                                    arguments: {
+                                      'imagePath':
+                                          cart.items[i]['image_url'] ?? '',
+                                      // add other required arguments here
+                                    });
                               },
                               child: Stack(
                                 alignment: Alignment.center,
@@ -57,7 +62,8 @@ class BottomCartSheet extends StatelessWidget {
                                     ),
                                   ),
                                   Image.network(
-                                    cart.items[i]['image_url'],
+                                    cart.items[i]['image_url'] ??
+                                        'https://via.placeholder.com/150',
                                     height: 130,
                                     width: 130,
                                     fit: BoxFit.contain,
@@ -73,7 +79,7 @@ class BottomCartSheet extends StatelessWidget {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    cart.items[i]['name'],
+                                    cart.items[i]['name'] ?? 'No Name',
                                     style: TextStyle(
                                       color: Color(0xFF475269),
                                       fontSize: 23,
@@ -106,7 +112,9 @@ class BottomCartSheet extends StatelessWidget {
                                         margin: EdgeInsets.symmetric(
                                             horizontal: 10),
                                         child: Text(
-                                          "01",
+                                          cart.items[i]['quantity']
+                                                  .toString() ??
+                                              '0',
                                           style: TextStyle(
                                             color: Color(0xFF475269),
                                             fontSize: 18,
@@ -171,7 +179,7 @@ class BottomCartSheet extends StatelessWidget {
                                   ),
                                   Spacer(),
                                   Text(
-                                    "\$${cart.items[i]['price']}",
+                                    "\$${cart.items[i]['price'] ?? '0.0'}",
                                     style: TextStyle(
                                       color: Color(0xFF475269),
                                       fontSize: 20,
