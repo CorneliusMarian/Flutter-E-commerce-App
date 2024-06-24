@@ -1,6 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:ecommerce_app/providers/users_provider.dart';
 
 class LoginPage extends StatelessWidget {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  void _signIn(BuildContext context) async {
+    final email = emailController.text;
+    final password = passwordController.text;
+
+    final usersProvider = Provider.of<UsersProvider>(context, listen: false);
+    final user = await usersProvider.authenticateUser(email, password);
+
+    if (user != null) {
+      if (user['isAdmin'] == true) {
+        Navigator.pushNamed(context, 'AdminMenu');
+      } else {
+        Navigator.pushNamed(context, 'homePage');
+      }
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Invalid credentials'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,6 +75,7 @@ class LoginPage extends StatelessWidget {
                     Container(
                       width: 250,
                       child: TextFormField(
+                        controller: emailController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: "Enter Username",
@@ -74,6 +112,8 @@ class LoginPage extends StatelessWidget {
                     Container(
                       width: 250,
                       child: TextFormField(
+                        controller: passwordController,
+                        obscureText: true,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: "Enter Password",
@@ -101,9 +141,7 @@ class LoginPage extends StatelessWidget {
               ),
               SizedBox(height: 40),
               InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, "homePage");
-                },
+                onTap: () => _signIn(context),
                 child: Container(
                   alignment: Alignment.center,
                   margin: EdgeInsets.symmetric(horizontal: 20),
@@ -144,7 +182,9 @@ class LoginPage extends StatelessWidget {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, 'SignUpPage');
+                    },
                     child: Text(
                       "Sign Up",
                       style: TextStyle(

@@ -55,21 +55,21 @@ class HomePage extends StatelessWidget {
                   title: Text('Barbati'),
                   onTap: () {
                     Navigator.pop(context); // Închide drawer-ul
-                    // Navighează la pagina corespunzătoare
+                    Navigator.pushNamed(context, 'MenProducts');
                   },
                 ),
                 ListTile(
                   title: Text('Femei'),
                   onTap: () {
                     Navigator.pop(context); // Închide drawer-ul
-                    // Navighează la pagina corespunzătoare
+                    Navigator.pushNamed(context, 'WomenProducts');
                   },
                 ),
                 ListTile(
                   title: Text('Copii'),
                   onTap: () {
                     Navigator.pop(context); // Închide drawer-ul
-                    // Navighează la pagina corespunzătoare
+                    Navigator.pushNamed(context, 'ChildrenProducts');
                   },
                 ),
               ],
