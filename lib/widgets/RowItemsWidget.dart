@@ -1,6 +1,8 @@
+import 'dart:convert'; // Importă acest pachet pentru decodificare Base64
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class RowItemsWidget extends StatelessWidget {
   final CollectionReference _productsCollection =
@@ -27,14 +29,21 @@ class RowItemsWidget extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: products.map((product) {
-              final imageUrl = product['image_url']?.isNotEmpty == true
-                  ? product['image_url']
-                  : 'https://via.placeholder.com/150';
+              final productData = product.data() as Map<String, dynamic>;
+              final imageBase64 = productData.containsKey('image_base64')
+                  ? productData['image_base64']
+                  : null;
+              final imageBytes = imageBase64 != null
+                  ? Base64Decoder().convert(imageBase64)
+                  : null;
+              final image = imageBytes != null
+                  ? Image.memory(imageBytes)
+                  : Image.network('https://via.placeholder.com/150');
 
               return Container(
                 margin: EdgeInsets.only(top: 10, bottom: 10, left: 15),
                 padding: EdgeInsets.symmetric(horizontal: 10),
-                height: 180,
+                height: 170,
                 decoration: BoxDecoration(
                   color: Color(0xFFF5F9FD),
                   borderRadius: BorderRadius.circular(10),
@@ -53,62 +62,70 @@ class RowItemsWidget extends StatelessWidget {
                       children: [
                         Container(
                           margin: EdgeInsets.only(top: 20, right: 70),
-                          height: 110,
-                          width: 120,
+                          height: 100,
+                          width: 110,
                           decoration: BoxDecoration(
                             color: Color(0xFF475269),
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                        Image.network(
-                          imageUrl,
-                          height: 150,
-                          width: 150,
-                          fit: BoxFit.contain,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Image.network(
-                              'https://via.placeholder.com/150',
-                              fit: BoxFit.contain,
-                            );
-                          },
+                        AspectRatio(
+                          aspectRatio: 1.0, // Raportul aspectului imaginii
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: FittedBox(
+                              fit: BoxFit.cover,
+                              child: image,
+                            ),
+                          ),
                         ),
                       ],
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 30),
+                      padding: EdgeInsets.symmetric(vertical: 10),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            product['name'] ?? 'No Name',
+                          AutoSizeText(
+                            productData['name'] ?? 'No Name',
                             style: TextStyle(
                               color: Color(0xFF475269),
-                              fontSize: 23,
+                              fontSize: 18,
                               fontWeight: FontWeight.w500,
                             ),
+                            maxLines: 1,
+                            minFontSize: 12,
+                            overflow: TextOverflow.ellipsis,
                           ),
                           SizedBox(height: 5),
-                          Text(
-                            product['description'] ??
+                          AutoSizeText(
+                            productData['description'] ??
                                 'No description available',
                             style: TextStyle(
                               color: Color(0xFF475269),
-                              fontSize: 16,
+                              fontSize: 14,
                             ),
+                            maxLines: 2,
+                            minFontSize: 12,
+                            overflow: TextOverflow.ellipsis,
                           ),
                           Spacer(),
                           Row(
                             children: [
-                              Text(
-                                "\$${product['price']?.toString() ?? '0.0'}",
+                              AutoSizeText(
+                                "\$${productData['price']?.toString() ?? '0.0'}",
                                 style: TextStyle(
                                   color: Colors.redAccent,
-                                  fontSize: 22,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.w500,
                                 ),
+                                maxLines: 1,
+                                minFontSize: 12,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              SizedBox(width: 70),
+                              SizedBox(width: 50),
                               Container(
-                                padding: EdgeInsets.all(10),
+                                padding: EdgeInsets.all(5),
                                 decoration: BoxDecoration(
                                   color: Color(0xFF475269),
                                   borderRadius: BorderRadius.circular(10),
@@ -116,7 +133,7 @@ class RowItemsWidget extends StatelessWidget {
                                 child: Icon(
                                   CupertinoIcons.cart_fill_badge_plus,
                                   color: Colors.white,
-                                  size: 25,
+                                  size: 20,
                                 ),
                               ),
                             ],

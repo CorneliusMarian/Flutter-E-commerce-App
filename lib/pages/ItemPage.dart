@@ -1,15 +1,16 @@
+import 'dart:convert';
 import 'package:ecommerce_app/widgets/ItemBottomNavBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class ItemPage extends StatelessWidget {
-  final String imagePath;
+  final String? imagePath;
   final String productName;
   final String productDescription;
   final double productPrice;
 
   ItemPage({
-    required this.imagePath,
+    this.imagePath,
     required this.productName,
     required this.productDescription,
     required this.productPrice,
@@ -17,6 +18,12 @@ class ItemPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final imageBytes =
+        imagePath != null ? Base64Decoder().convert(imagePath!) : null;
+    final image = imageBytes != null
+        ? Image.memory(imageBytes)
+        : Image.network('https://via.placeholder.com/150');
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -79,19 +86,15 @@ class ItemPage extends StatelessWidget {
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    Image.network(
-                      imagePath, // Folosește calea imaginii transmisă prin constructor
-                      height: 350,
-                      width: 350,
-                      fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Image.network(
-                          'https://via.placeholder.com/150',
-                          height: 350,
-                          width: 350,
-                          fit: BoxFit.contain,
-                        );
-                      },
+                    AspectRatio(
+                      aspectRatio: 1.0,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: FittedBox(
+                          fit: BoxFit.cover,
+                          child: image,
+                        ),
+                      ),
                     ),
                   ],
                 ),

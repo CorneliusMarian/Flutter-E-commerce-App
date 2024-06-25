@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/pages/ItemPage.dart';
@@ -36,15 +37,21 @@ class MenProducts extends StatelessWidget {
               crossAxisCount: 2,
               mainAxisSpacing: 10,
               crossAxisSpacing: 10,
-              childAspectRatio:
-                  0.7, // Ajustează aspectul pentru a evita overflow-ul
+              childAspectRatio: 0.7,
             ),
             itemCount: products.length,
             itemBuilder: (context, index) {
               final product = products[index];
-              final imageUrl = product['image_url']?.isNotEmpty == true
-                  ? product['image_url']
-                  : 'https://via.placeholder.com/150';
+              final productData = product.data() as Map<String, dynamic>;
+              final imageBase64 = productData.containsKey('image_base64')
+                  ? productData['image_base64']
+                  : null;
+              final imageBytes = imageBase64 != null
+                  ? Base64Decoder().convert(imageBase64)
+                  : null;
+              final image = imageBytes != null
+                  ? Image.memory(imageBytes)
+                  : Image.network('https://via.placeholder.com/150');
 
               return GestureDetector(
                 onTap: () {
@@ -52,11 +59,11 @@ class MenProducts extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) => ItemPage(
-                        imagePath: imageUrl,
-                        productName: product['name'] ?? 'No Name',
-                        productDescription: product['description'] ??
+                        imagePath: imageBase64,
+                        productName: productData['name'] ?? 'No Name',
+                        productDescription: productData['description'] ??
                             'No description available',
-                        productPrice: product['price']?.toDouble() ?? 0.0,
+                        productPrice: productData['price']?.toDouble() ?? 0.0,
                       ),
                     ),
                   );
@@ -77,27 +84,22 @@ class MenProducts extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Image.network(
-                          imageUrl,
-                          height: 120,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Image.network(
-                              'https://via.placeholder.com/150',
-                              height: 120,
-                              width: double.infinity,
+                      Expanded(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: AspectRatio(
+                            aspectRatio: 1.0,
+                            child: FittedBox(
                               fit: BoxFit.cover,
-                            );
-                          },
+                              child: image,
+                            ),
+                          ),
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: AutoSizeText(
-                          product['name'] ?? 'No Name',
+                          productData['name'] ?? 'No Name',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -111,7 +113,8 @@ class MenProducts extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: AutoSizeText(
-                          product['description'] ?? 'No description available',
+                          productData['description'] ??
+                              'No description available',
                           maxLines: 2,
                           minFontSize: 12,
                           overflow: TextOverflow.ellipsis,
@@ -121,19 +124,18 @@ class MenProducts extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Expanded(
-                        child:
-                            Container(), // Umple spațiul rămas pentru a evita overflow-ul
-                      ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          '\$${product['price']?.toDouble() ?? 0.0}',
+                        child: AutoSizeText(
+                          '\$${productData['price']?.toDouble() ?? 0.0}',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Colors.redAccent,
                           ),
+                          maxLines: 1,
+                          minFontSize: 12,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],

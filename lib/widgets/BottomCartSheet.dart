@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:ecommerce_app/widgets/CartProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -61,12 +62,19 @@ class BottomCartSheet extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
-                                  Image.network(
-                                    cart.items[i]['image_url'] ??
-                                        'https://via.placeholder.com/150',
-                                    height: 130,
-                                    width: 130,
-                                    fit: BoxFit.contain,
+                                  Builder(
+                                    builder: (context) {
+                                      final imageBase64 =
+                                          cart.items[i]['image_url'];
+                                      final imageBytes = imageBase64 != null
+                                          ? Base64Decoder().convert(imageBase64)
+                                          : null;
+                                      final image = imageBytes != null
+                                          ? Image.memory(imageBytes)
+                                          : Image.network(
+                                              'https://via.placeholder.com/150');
+                                      return image;
+                                    },
                                   ),
                                 ],
                               ),

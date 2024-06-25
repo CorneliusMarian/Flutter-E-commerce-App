@@ -5,7 +5,6 @@ class ProductsProvider {
       FirebaseFirestore.instance.collection('Products');
 
   Future<int> _getNextProductId() async {
-    // Obține cel mai mare product_id din colecție și incrementează-l
     QuerySnapshot querySnapshot = await productsCollection
         .orderBy('product_id', descending: true)
         .limit(1)
@@ -13,7 +12,7 @@ class ProductsProvider {
     if (querySnapshot.docs.isNotEmpty) {
       return querySnapshot.docs.first['product_id'] + 1;
     } else {
-      return 1; // Dacă nu există produse, începe de la 1
+      return 1;
     }
   }
 
@@ -21,7 +20,7 @@ class ProductsProvider {
     required String categoryId,
     required String name,
     required String description,
-    required String imageUrl,
+    required String imageBase64,
     required double price,
     required int stock,
   }) async {
@@ -31,7 +30,7 @@ class ProductsProvider {
       'category_id': categoryId,
       'name': name,
       'description': description,
-      'image_url': imageUrl,
+      'image_base64': imageBase64,
       'price': price,
       'stock': stock,
     });

@@ -1,7 +1,9 @@
+import 'dart:convert'; // Importați acest pachet pentru codificare Base64
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ecommerce_app/providers/categories_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:ecommerce_app/providers/products_provider.dart';
+import 'package:ecommerce_app/providers/categories_provider.dart';
 
 class UploadProductPage extends StatefulWidget {
   @override
@@ -14,43 +16,21 @@ class _UploadProductPageState extends State<UploadProductPage> {
   TextEditingController _priceController = TextEditingController();
   TextEditingController _qtyController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
-  String? _imageUrl;
+  String? _imageBase64;
 
   CategoriesProvider _categoriesProvider = CategoriesProvider();
   ProductsProvider _productsProvider = ProductsProvider();
 
-  void _showImagePickerDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Choose option'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: Icon(Icons.photo_library, color: Colors.blue),
-                title: Text('Gallery'),
-                onTap: () {
-                  // Implement gallery picker logic here
-                  Navigator.of(context).pop();
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.remove_circle, color: Colors.red),
-                title: Text('Remove'),
-                onTap: () {
-                  setState(() {
-                    _imageUrl = null;
-                  });
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      final bytes = await pickedFile.readAsBytes();
+      setState(() {
+        _imageBase64 = base64Encode(bytes);
+      });
+    }
   }
 
   Future<void> _uploadProduct() async {
@@ -69,19 +49,18 @@ class _UploadProductPageState extends State<UploadProductPage> {
           categoryId: categoryId,
           name: _titleController.text,
           description: _descriptionController.text,
-          imageUrl: _imageUrl ?? '',
+          imageBase64: _imageBase64 ?? '',
           price: double.parse(_priceController.text),
           stock: int.parse(_qtyController.text),
         );
 
-        // Clear the form
         _titleController.clear();
         _priceController.clear();
         _qtyController.clear();
         _descriptionController.clear();
         setState(() {
           _selectedCategory = null;
-          _imageUrl = null;
+          _imageBase64 = null;
         });
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -89,7 +68,6 @@ class _UploadProductPageState extends State<UploadProductPage> {
         );
       }
     } else {
-      // Show an error message if validation fails
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please fill all fields except image.')),
       );
@@ -116,7 +94,7 @@ class _UploadProductPageState extends State<UploadProductPage> {
             children: [
               Center(
                 child: GestureDetector(
-                  onTap: _showImagePickerDialog,
+                  onTap: _pickImage,
                   child: Container(
                     height: 150,
                     width: 150,
@@ -229,7 +207,7 @@ class _UploadProductPageState extends State<UploadProductPage> {
                         _descriptionController.clear();
                         setState(() {
                           _selectedCategory = null;
-                          _imageUrl = null;
+                          _imageBase64 = null;
                         });
                       },
                       child: Text('Clear'),
