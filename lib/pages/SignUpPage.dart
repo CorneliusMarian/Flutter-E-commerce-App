@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ecommerce_app/providers/users_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -24,8 +25,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          Color(0xFFCEDDEE), // Aceeași culoare de fundal ca și LoginPage
+      backgroundColor: Color(0xFFCEDDEE), // Same background color as LoginPage
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -78,7 +78,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Indică un câmp obligatoriu';
+                      return 'This field is required';
                     }
                     return null;
                   },
@@ -98,7 +98,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Indică un câmp obligatoriu';
+                      return 'This field is required';
                     }
                     return null;
                   },
@@ -118,10 +118,10 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Indică un câmp obligatoriu';
+                      return 'This field is required';
                     }
                     if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                      return 'Introduceți un email valid';
+                      return 'Please enter a valid email';
                     }
                     return null;
                   },
@@ -142,7 +142,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Indică un câmp obligatoriu';
+                      return 'This field is required';
                     }
                     return null;
                   },
@@ -163,10 +163,10 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Indică un câmp obligatoriu';
+                      return 'This field is required';
                     }
                     if (value != passwordController.text) {
-                      return 'Parolele nu se potrivesc';
+                      return 'Passwords do not match';
                     }
                     return null;
                   },
@@ -188,16 +188,29 @@ class _SignUpPageState extends State<SignUpPage> {
                   child: InkWell(
                     onTap: () async {
                       if (_validateFields()) {
-                        final usersProvider =
-                            Provider.of<UsersProvider>(context, listen: false);
-                        await usersProvider.addUser(
-                          firstName: nameController.text,
-                          lastName: lastNameController.text,
-                          email: emailController.text,
-                          password: passwordController.text,
-                        );
-                        Navigator.pop(
-                            context); // Navighează înapoi la pagina de login după înregistrare
+                        try {
+                          UserCredential userCredential = await FirebaseAuth
+                              .instance
+                              .createUserWithEmailAndPassword(
+                            email: emailController.text,
+                            password: passwordController.text,
+                          );
+                          final usersProvider = Provider.of<UsersProvider>(
+                              context,
+                              listen: false);
+                          await usersProvider.addUser(
+                            firstName: nameController.text,
+                            lastName: lastNameController.text,
+                            email: emailController.text,
+                            password: passwordController.text,
+                          );
+                          Navigator.pop(
+                              context); // Navigate back to login page after registration
+                        } catch (e) {
+                          print(e);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Failed to sign up')));
+                        }
                       }
                     },
                     child: Container(
