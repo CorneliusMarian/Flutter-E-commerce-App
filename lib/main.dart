@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/pages/UpdateProductPage.dart';
 import 'package:ecommerce_app/pages/UploadProductPage.dart';
 import 'package:ecommerce_app/widgets/CartProvider.dart';
 import 'package:flutter/material.dart';
@@ -9,13 +10,16 @@ import 'package:ecommerce_app/pages/SignUpPage.dart';
 import 'package:ecommerce_app/pages/MenProducts.dart';
 import 'package:ecommerce_app/pages/WomenProducts.dart';
 import 'package:ecommerce_app/pages/ChildrenProducts.dart';
-import 'package:ecommerce_app/pages/AllProductsAdminPage.dart'; // Importă AllProductsAdminPage
-import 'package:ecommerce_app/pages/UpdateProductPage.dart'; // Importă UpdateProductPage
+import 'package:ecommerce_app/pages/AllProductsAdminPage.dart';
+import 'package:ecommerce_app/pages/CheckOutPage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:provider/provider.dart';
 import 'package:ecommerce_app/providers/users_provider.dart';
 import 'package:ecommerce_app/providers/categories_provider.dart';
+import 'package:ecommerce_app/providers/address_provider.dart';
+import 'package:ecommerce_app/providers/order_provider.dart'; // Import OrderProvider
+import 'package:ecommerce_app/providers/order_details_provider.dart'; // Import OrderDetailsProvider
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +27,6 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Adăugăm categoriile implicite la inițializarea aplicației
   CategoriesProvider categoriesProvider = CategoriesProvider();
   await categoriesProvider.addDefaultCategories();
 
@@ -32,6 +35,11 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => UsersProvider()),
+        ChangeNotifierProvider(create: (_) => AddressProvider()),
+        ChangeNotifierProvider(
+            create: (_) => OrderProvider()), // Add OrderProvider
+        ChangeNotifierProvider(
+            create: (_) => OrderDetailsProvider()), // Add OrderDetailsProvider
       ],
       child: MyApp(),
     ),
@@ -49,19 +57,17 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       routes: {
-        "/": (context) => LoginPage(), // Ruta implicită => LoginPage()
+        "/": (context) => LoginPage(),
         "homePage": (context) => HomePage(),
         "UploadProductPage": (context) => UploadProductPage(),
         "AdminMenu": (context) => AdminMenu(),
         "SignUpPage": (context) => SignUpPage(),
-        "MenProducts": (context) =>
-            MenProducts(), // Adăugarea rutei pentru MenProducts
-        "WomenProducts": (context) =>
-            WomenProducts(), // Adăugarea rutei pentru WomenProducts
-        "ChildrenProducts": (context) =>
-            ChildrenProducts(), // Adăugarea rutei pentru ChildrenProducts
-        "AllProductsAdminPage": (context) =>
-            AllProductsAdminPage(), // Adăugarea rutei pentru AllProductsAdminPage
+        "MenProducts": (context) => MenProducts(),
+        "WomenProducts": (context) => WomenProducts(),
+        "ChildrenProducts": (context) => ChildrenProducts(),
+        "AllProductsAdminPage": (context) => AllProductsAdminPage(),
+        "CheckOutPage": (context) =>
+            CheckOutPage(), // Add route for CheckOutPage
       },
       onGenerateRoute: (settings) {
         if (settings.name == 'itemPage') {

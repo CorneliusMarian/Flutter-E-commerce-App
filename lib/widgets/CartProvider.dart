@@ -116,6 +116,28 @@ class CartProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> clearCart() async {
+    await _initializeCart();
+
+    final cartItemsSnapshot = await _firestore
+        .collection('Cart')
+        .doc(_cartId)
+        .collection('items')
+        .get();
+
+    for (var item in cartItemsSnapshot.docs) {
+      await _firestore
+          .collection('Cart')
+          .doc(_cartId)
+          .collection('items')
+          .doc(item.id)
+          .delete();
+    }
+
+    _items.clear();
+    notifyListeners();
+  }
+
   void increaseItemQuantity(int index) async {
     if (_items[index]['quantity'] != null) {
       _items[index]['quantity']++;
