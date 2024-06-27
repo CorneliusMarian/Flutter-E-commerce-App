@@ -12,6 +12,7 @@ import 'package:ecommerce_app/pages/WomenProducts.dart';
 import 'package:ecommerce_app/pages/ChildrenProducts.dart';
 import 'package:ecommerce_app/pages/AllProductsAdminPage.dart';
 import 'package:ecommerce_app/pages/CheckOutPage.dart';
+import 'package:ecommerce_app/pages/stripe_service.dart'; // Import StripeService
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:provider/provider.dart';
@@ -66,8 +67,7 @@ class MyApp extends StatelessWidget {
         "WomenProducts": (context) => WomenProducts(),
         "ChildrenProducts": (context) => ChildrenProducts(),
         "AllProductsAdminPage": (context) => AllProductsAdminPage(),
-        "CheckOutPage": (context) =>
-            CheckOutPage(), // Add route for CheckOutPage
+        "CheckOutPage": (context) => CheckOutPage(),
       },
       onGenerateRoute: (settings) {
         if (settings.name == 'itemPage') {

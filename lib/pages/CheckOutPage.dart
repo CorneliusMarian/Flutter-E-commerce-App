@@ -3,7 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:ecommerce_app/providers/address_provider.dart';
 import 'package:ecommerce_app/providers/order_provider.dart';
 import 'package:ecommerce_app/providers/order_details_provider.dart';
-import 'package:ecommerce_app/widgets/CartProvider.dart'; // Import CartProvider
+import 'package:ecommerce_app/widgets/CartProvider.dart';
+import 'package:ecommerce_app/pages/stripe_service.dart';
 
 class CheckOutPage extends StatefulWidget {
   @override
@@ -82,7 +83,6 @@ class _CheckOutPageState extends State<CheckOutPage> {
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
-
                     Provider.of<AddressProvider>(context, listen: false)
                         .addAddress(
                       streetName: _streetName,
@@ -100,9 +100,36 @@ class _CheckOutPageState extends State<CheckOutPage> {
                           .createOrderDetails(orderId);
                       await Provider.of<CartProvider>(context, listen: false)
                           .clearCart();
-                      Navigator.pop(context);
+
+                      var items = [
+                        {
+                          "productPrice": 250,
+                          "productName": "Pantofi eleganti",
+                          "qty": 1,
+                        },
+                        {
+                          "productPrice": 548,
+                          "productName": "Pantofi Minecraft",
+                          "qty": 1,
+                        },
+                      ];
+
+                      await StripeService.stripePaymentCheckout(
+                        items,
+                        798,
+                        context,
+                        mounted,
+                        onSuccess: () {
+                          print("SUCCES");
+                        },
+                        onCancel: () {
+                          print("CANCEL");
+                        },
+                        onError: (e) {
+                          print("error: " + e.toString());
+                        },
+                      );
                     } catch (e) {
-                      // Handle error
                       print(e);
                     }
                   }
