@@ -1,5 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:convert'; // Importă acest pachet pentru decodificare Base64
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UpdateProductPage extends StatefulWidget {
   final String productId;
@@ -22,28 +23,29 @@ class UpdateProductPage extends StatefulWidget {
 
 class _UpdateProductPageState extends State<UpdateProductPage> {
   final _formKey = GlobalKey<FormState>();
-  late TextEditingController _imageUrlController;
-  late TextEditingController _productNameController;
-  late TextEditingController _productDescriptionController;
-  late TextEditingController _productPriceController;
+  late String _productName;
+  late String _productDescription;
+  late double _productPrice;
+  late TextEditingController _nameController;
+  late TextEditingController _descriptionController;
+  late TextEditingController _priceController;
 
   @override
   void initState() {
     super.initState();
-    _imageUrlController = TextEditingController(text: widget.imageUrl);
-    _productNameController = TextEditingController(text: widget.productName);
-    _productDescriptionController =
-        TextEditingController(text: widget.productDescription);
-    _productPriceController =
-        TextEditingController(text: widget.productPrice.toString());
+    _productName = widget.productName;
+    _productDescription = widget.productDescription;
+    _productPrice = widget.productPrice;
+    _nameController = TextEditingController(text: _productName);
+    _descriptionController = TextEditingController(text: _productDescription);
+    _priceController = TextEditingController(text: _productPrice.toString());
   }
 
   @override
   void dispose() {
-    _imageUrlController.dispose();
-    _productNameController.dispose();
-    _productDescriptionController.dispose();
-    _productPriceController.dispose();
+    _nameController.dispose();
+    _descriptionController.dispose();
+    _priceController.dispose();
     super.dispose();
   }
 
@@ -53,125 +55,102 @@ class _UpdateProductPageState extends State<UpdateProductPage> {
           .collection('Products')
           .doc(widget.productId)
           .update({
-        'image_url': _imageUrlController.text,
-        'name': _productNameController.text,
-        'description': _productDescriptionController.text,
-        'price': double.tryParse(_productPriceController.text) ??
-            widget.productPrice,
+        'name': _productName,
+        'description': _productDescription,
+        'price': _productPrice,
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Product updated successfully')),
+        SnackBar(content: Text('Product updated successfully!')),
       );
-
-      Navigator.pop(context);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final imageBytes = Base64Decoder().convert(widget.imageUrl);
+    final image = Image.memory(imageBytes, fit: BoxFit.cover);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Update Product'),
         backgroundColor: Color(0xFF475269),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: GestureDetector(
-                    onTap: () {
-                      // Cod pentru a alege o nouă imagine
-                    },
-                    child: Container(
-                      height: 150,
-                      width: 150,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Image.network(
-                        _imageUrlController.text,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Icon(
-                            Icons.image,
-                            size: 50,
-                            color: Colors.grey,
-                          );
-                        },
-                      ),
-                    ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: AspectRatio(
+                  aspectRatio: 1.0,
+                  child: FittedBox(
+                    fit: BoxFit.cover,
+                    child: image,
                   ),
                 ),
-                SizedBox(height: 20),
-                TextFormField(
-                  controller: _imageUrlController,
-                  decoration: InputDecoration(labelText: 'Image URL'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the image URL';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 20),
-                TextFormField(
-                  controller: _productNameController,
-                  decoration: InputDecoration(labelText: 'Product Name'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the product name';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 20),
-                TextFormField(
-                  controller: _productDescriptionController,
-                  decoration: InputDecoration(labelText: 'Product Description'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the product description';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 20),
-                TextFormField(
-                  controller: _productPriceController,
-                  decoration: InputDecoration(labelText: 'Product Price'),
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the product price';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 20),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: _updateProduct,
-                    child: Text('Update Product'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF475269),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                      textStyle: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+              SizedBox(height: 16),
+              TextFormField(
+                controller: _nameController,
+                decoration: InputDecoration(labelText: 'Product Name'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a product name';
+                  }
+                  return null;
+                },
+                onChanged: (value) {
+                  setState(() {
+                    _productName = value;
+                  });
+                },
+              ),
+              SizedBox(height: 16),
+              TextFormField(
+                controller: _descriptionController,
+                decoration: InputDecoration(labelText: 'Product Description'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a product description';
+                  }
+                  return null;
+                },
+                onChanged: (value) {
+                  setState(() {
+                    _productDescription = value;
+                  });
+                },
+              ),
+              SizedBox(height: 16),
+              TextFormField(
+                controller: _priceController,
+                decoration: InputDecoration(labelText: 'Product Price'),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a product price';
+                  }
+                  final price = double.tryParse(value);
+                  if (price == null || price <= 0) {
+                    return 'Please enter a valid price';
+                  }
+                  return null;
+                },
+                onChanged: (value) {
+                  setState(() {
+                    _productPrice = double.tryParse(value) ?? 0.0;
+                  });
+                },
+              ),
+              SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: _updateProduct,
+                child: Text('Update Product'),
+              ),
+            ],
           ),
         ),
       ),
