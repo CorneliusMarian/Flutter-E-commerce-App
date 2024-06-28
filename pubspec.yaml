@@ -50,6 +50,9 @@ dependencies:
   stripe_checkout: ^1.0.2
   flutter_stripe: ^10.2.0
   http: ^1.2.1
+  chat_gpt_sdk: ^3.0.9
+  dash_chat_2: ^0.0.21
+  flutter_dotenv: ^5.0.2
 
 dev_dependencies:
   flutter_test:

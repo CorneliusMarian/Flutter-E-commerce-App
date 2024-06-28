@@ -1,10 +1,10 @@
-import 'dart:convert'; // Importă acest pachet pentru decodificare Base64
-import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ecommerce_app/pages/UpdateProductPage.dart';
+import 'dart:convert';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ecommerce_app/pages/users/ItemPage.dart';
+import 'package:flutter/material.dart';
 
-class AllProductsAdminPage extends StatelessWidget {
+class WomenProducts extends StatelessWidget {
   final CollectionReference _productsCollection =
       FirebaseFirestore.instance.collection('Products');
 
@@ -12,11 +12,13 @@ class AllProductsAdminPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Toate produsele'),
+        title: Text('Produse pentru femei'),
         backgroundColor: Color(0xFF475269),
       ),
       body: FutureBuilder<QuerySnapshot>(
-        future: _productsCollection.get(),
+        future: _productsCollection
+            .where('category_id', isEqualTo: 'hmpiCs20iTp2c3QkCPpi')
+            .get(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -35,7 +37,7 @@ class AllProductsAdminPage extends StatelessWidget {
               crossAxisCount: 2,
               mainAxisSpacing: 10,
               crossAxisSpacing: 10,
-              childAspectRatio: 0.75,
+              childAspectRatio: 0.7,
             ),
             itemCount: products.length,
             itemBuilder: (context, index) {
@@ -48,19 +50,16 @@ class AllProductsAdminPage extends StatelessWidget {
                   ? Base64Decoder().convert(imageBase64)
                   : null;
               final image = imageBytes != null
-                  ? Image.memory(imageBytes, fit: BoxFit.cover)
-                  : Image.network('https://via.placeholder.com/150',
-                      fit: BoxFit.cover);
+                  ? Image.memory(imageBytes)
+                  : Image.network('https://via.placeholder.com/150');
 
               return GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => UpdateProductPage(
-                        productId: product.id,
-                        imageUrl:
-                            imageBase64 ?? 'https://via.placeholder.com/150',
+                      builder: (context) => ItemPage(
+                        imagePath: imageBase64,
                         productName: productData['name'] ?? 'No Name',
                         productDescription: productData['description'] ??
                             'No description available',
@@ -125,16 +124,18 @@ class AllProductsAdminPage extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(height: 5),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text(
+                        child: AutoSizeText(
                           '\$${productData['price']?.toDouble() ?? 0.0}',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Colors.redAccent,
                           ),
+                          maxLines: 1,
+                          minFontSize: 12,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],

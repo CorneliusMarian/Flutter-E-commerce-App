@@ -1,10 +1,10 @@
-import 'dart:convert';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ecommerce_app/pages/ItemPage.dart';
+import 'dart:convert'; // Importă acest pachet pentru decodificare Base64
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ecommerce_app/pages/admin/UpdateProductPage.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
-class WomenProducts extends StatelessWidget {
+class AllProductsAdminPage extends StatelessWidget {
   final CollectionReference _productsCollection =
       FirebaseFirestore.instance.collection('Products');
 
@@ -12,13 +12,11 @@ class WomenProducts extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Produse pentru femei'),
+        title: Text('Toate produsele'),
         backgroundColor: Color(0xFF475269),
       ),
       body: FutureBuilder<QuerySnapshot>(
-        future: _productsCollection
-            .where('category_id', isEqualTo: 'hmpiCs20iTp2c3QkCPpi')
-            .get(),
+        future: _productsCollection.get(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -37,7 +35,7 @@ class WomenProducts extends StatelessWidget {
               crossAxisCount: 2,
               mainAxisSpacing: 10,
               crossAxisSpacing: 10,
-              childAspectRatio: 0.7,
+              childAspectRatio: 0.75,
             ),
             itemCount: products.length,
             itemBuilder: (context, index) {
@@ -50,16 +48,19 @@ class WomenProducts extends StatelessWidget {
                   ? Base64Decoder().convert(imageBase64)
                   : null;
               final image = imageBytes != null
-                  ? Image.memory(imageBytes)
-                  : Image.network('https://via.placeholder.com/150');
+                  ? Image.memory(imageBytes, fit: BoxFit.cover)
+                  : Image.network('https://via.placeholder.com/150',
+                      fit: BoxFit.cover);
 
               return GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ItemPage(
-                        imagePath: imageBase64,
+                      builder: (context) => UpdateProductPage(
+                        productId: product.id,
+                        imageUrl:
+                            imageBase64 ?? 'https://via.placeholder.com/150',
                         productName: productData['name'] ?? 'No Name',
                         productDescription: productData['description'] ??
                             'No description available',
@@ -124,18 +125,16 @@ class WomenProducts extends StatelessWidget {
                           ),
                         ),
                       ),
+                      SizedBox(height: 5),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: AutoSizeText(
+                        child: Text(
                           '\$${productData['price']?.toDouble() ?? 0.0}',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Colors.redAccent,
                           ),
-                          maxLines: 1,
-                          minFontSize: 12,
-                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],

@@ -1,18 +1,19 @@
-import 'package:ecommerce_app/pages/UpdateProductPage.dart';
-import 'package:ecommerce_app/pages/UploadProductPage.dart';
+import 'package:ecommerce_app/pages/admin/UpdateProductPage.dart';
+import 'package:ecommerce_app/pages/admin/UploadProductPage.dart';
+import 'package:ecommerce_app/pages/users/ChatPage.dart';
 import 'package:ecommerce_app/widgets/CartProvider.dart';
 import 'package:flutter/material.dart';
-import 'package:ecommerce_app/pages/HomePage.dart';
-import 'package:ecommerce_app/pages/ItemPage.dart';
-import 'package:ecommerce_app/pages/LoginPage.dart';
-import 'package:ecommerce_app/pages/AdminMenu.dart';
-import 'package:ecommerce_app/pages/SignUpPage.dart';
-import 'package:ecommerce_app/pages/MenProducts.dart';
-import 'package:ecommerce_app/pages/WomenProducts.dart';
-import 'package:ecommerce_app/pages/ChildrenProducts.dart';
-import 'package:ecommerce_app/pages/AllProductsAdminPage.dart';
-import 'package:ecommerce_app/pages/CheckOutPage.dart';
-import 'package:ecommerce_app/pages/stripe_service.dart'; // Import StripeService
+import 'package:ecommerce_app/pages/users/HomePage.dart';
+import 'package:ecommerce_app/pages/users/ItemPage.dart';
+import 'package:ecommerce_app/pages/users/LoginPage.dart';
+import 'package:ecommerce_app/pages/admin/AdminMenu.dart';
+import 'package:ecommerce_app/pages/users/SignUpPage.dart';
+import 'package:ecommerce_app/pages/users/MenProducts.dart';
+import 'package:ecommerce_app/pages/users/WomenProducts.dart';
+import 'package:ecommerce_app/pages/users/ChildrenProducts.dart';
+import 'package:ecommerce_app/pages/admin/AllProductsAdminPage.dart';
+import 'package:ecommerce_app/pages/payment/CheckOutPage.dart';
+import 'package:ecommerce_app/pages/payment/stripe_service.dart'; // Import StripeService
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:provider/provider.dart';
@@ -68,6 +69,8 @@ class MyApp extends StatelessWidget {
         "ChildrenProducts": (context) => ChildrenProducts(),
         "AllProductsAdminPage": (context) => AllProductsAdminPage(),
         "CheckOutPage": (context) => CheckOutPage(),
+        "ChatPage": (context) =>
+            ChatPage(userID: 'user123'), // Adăugăm ruta pentru ChatPage
       },
       onGenerateRoute: (settings) {
         if (settings.name == 'itemPage') {

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ecommerce_app/pages/ItemPage.dart';
+import 'package:ecommerce_app/pages/users/ItemPage.dart';
 import 'package:flutter/material.dart';
 
 class ChildrenProducts extends StatelessWidget {

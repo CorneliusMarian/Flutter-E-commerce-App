@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:ecommerce_app/pages/users/ChatPage.dart';
 import 'package:ecommerce_app/widgets/CartProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
@@ -7,7 +8,7 @@ import 'package:ecommerce_app/widgets/AllItemsWidget.dart';
 import 'package:ecommerce_app/widgets/HomeBottomNavBar.dart';
 import 'package:ecommerce_app/widgets/RowItemsWidget.dart';
 import 'package:ecommerce_app/providers/products_provider.dart';
-import 'package:auto_size_text/auto_size_text.dart'; // Adăugat
+import 'package:auto_size_text/auto_size_text.dart';
 
 class HomePage extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -76,9 +77,14 @@ class HomePage extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.settings),
-              title: Text('Settings'),
+              title: Text('Asistenutul tau virtual'),
               onTap: () {
                 Navigator.pop(context); // Închide drawer-ul
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ChatPage(userID: 'user123')),
+                ); // Navighează către pagina de chat
               },
             ),
             ListTile(

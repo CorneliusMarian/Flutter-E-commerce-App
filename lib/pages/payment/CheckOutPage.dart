@@ -4,7 +4,7 @@ import 'package:ecommerce_app/providers/address_provider.dart';
 import 'package:ecommerce_app/providers/order_provider.dart';
 import 'package:ecommerce_app/providers/order_details_provider.dart';
 import 'package:ecommerce_app/widgets/CartProvider.dart';
-import 'package:ecommerce_app/pages/stripe_service.dart';
+import 'package:ecommerce_app/pages/payment/stripe_service.dart';
 
 class CheckOutPage extends StatefulWidget {
   @override

@@ -1,7 +1,7 @@
 import 'dart:convert'; // Importă acest pachet pentru decodificare Base64
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ecommerce_app/pages/ItemPage.dart';
+import 'package:ecommerce_app/pages/users/ItemPage.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 class AllItemsWidget extends StatelessWidget {

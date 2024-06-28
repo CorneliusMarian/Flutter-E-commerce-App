@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:ecommerce_app/pages/CheckOutPage.dart'; // Import CheckOutPage
+import 'package:ecommerce_app/pages/payment/CheckOutPage.dart'; // Import CheckOutPage
 
 class BottomCartSheet extends StatelessWidget {
   @override
