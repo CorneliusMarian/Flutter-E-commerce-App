@@ -88,12 +88,9 @@ class AllProductsAdminPage extends StatelessWidget {
                       Expanded(
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
-                          child: AspectRatio(
-                            aspectRatio: 1.0,
-                            child: FittedBox(
-                              fit: BoxFit.cover,
-                              child: image,
-                            ),
+                          child: Container(
+                            width: double.infinity,
+                            child: image,
                           ),
                         ),
                       ),

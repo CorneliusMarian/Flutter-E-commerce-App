@@ -26,7 +26,7 @@ class HomePage extends StatelessWidget {
                 color: Colors.blue,
               ),
               child: Text(
-                'Menu',
+                'Meniu',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24,
@@ -35,7 +35,7 @@ class HomePage extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.home),
-              title: Text('Home'),
+              title: Text('Acasa'),
               onTap: () {
                 Navigator.pop(context); // Închide drawer-ul
                 Navigator.pushNamed(context, "homePage");
@@ -43,7 +43,7 @@ class HomePage extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.person),
-              title: Text('Profile'),
+              title: Text('Profil'),
               onTap: () {
                 Navigator.pop(context); // Închide drawer-ul
               },
@@ -89,7 +89,7 @@ class HomePage extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.logout),
-              title: Text('Logout'),
+              title: Text('Deconectare'),
               onTap: () {
                 Navigator.pop(context); // Închide drawer-ul
                 Navigator.pushNamed(context, "/");
@@ -189,7 +189,7 @@ class HomePage extends StatelessWidget {
                       child: TextFormField(
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: "Search",
+                          hintText: "Căutare",
                         ),
                       ),
                     ),

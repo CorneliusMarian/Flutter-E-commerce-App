@@ -37,8 +37,10 @@ class RowItemsWidget extends StatelessWidget {
                   ? Base64Decoder().convert(imageBase64)
                   : null;
               final image = imageBytes != null
-                  ? Image.memory(imageBytes)
-                  : Image.network('https://via.placeholder.com/150');
+                  ? Image.memory(imageBytes,
+                      fit: BoxFit.cover, width: 100, height: 100)
+                  : Image.network('https://via.placeholder.com/150',
+                      fit: BoxFit.cover, width: 100, height: 100);
 
               return Container(
                 margin: EdgeInsets.only(top: 10, bottom: 10, left: 15),
@@ -57,29 +59,15 @@ class RowItemsWidget extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(top: 20, right: 70),
-                          height: 100,
-                          width: 110,
-                          decoration: BoxDecoration(
-                            color: Color(0xFF475269),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        AspectRatio(
-                          aspectRatio: 1.0, // Raportul aspectului imaginii
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: FittedBox(
-                              fit: BoxFit.cover,
-                              child: image,
-                            ),
-                          ),
-                        ),
-                      ],
+                    Container(
+                      margin: EdgeInsets.only(
+                          right: 10), // Spațiu între imagine și text
+                      width: 100,
+                      height: 100,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: image,
+                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 10),

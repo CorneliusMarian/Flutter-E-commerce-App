@@ -103,13 +103,13 @@ class _CheckOutPageState extends State<CheckOutPage> {
 
                       var items = [
                         {
-                          "productPrice": 250,
-                          "productName": "Pantofi eleganti",
+                          "productPrice": 180,
+                          "productName": "Sandale piele",
                           "qty": 1,
                         },
                         {
-                          "productPrice": 548,
-                          "productName": "Pantofi Minecraft",
+                          "productPrice": 290,
+                          "productName": "Adidasi Jordan",
                           "qty": 1,
                         },
                       ];

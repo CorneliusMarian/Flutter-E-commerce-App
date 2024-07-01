@@ -64,12 +64,12 @@ class _UploadProductPageState extends State<UploadProductPage> {
         });
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Selected category not found.')),
+          SnackBar(content: Text('Categoria selectata nu a fost gasită.')),
         );
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please fill all fields except image.')),
+        SnackBar(content: Text('Completati toate campurile.')),
       );
     }
   }
@@ -78,7 +78,7 @@ class _UploadProductPageState extends State<UploadProductPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Upload a new product'),
+        title: Text('Adăugare produs nou'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -109,7 +109,7 @@ class _UploadProductPageState extends State<UploadProductPage> {
                           Icon(Icons.image, size: 50, color: Colors.blue),
                           SizedBox(height: 8),
                           Text(
-                            'Pick Product image',
+                            'Adaugă imagine',
                             style: TextStyle(color: Colors.blue),
                           ),
                         ],
@@ -126,10 +126,10 @@ class _UploadProductPageState extends State<UploadProductPage> {
                     return CircularProgressIndicator();
                   }
                   if (snapshot.hasError) {
-                    return Text('Error loading categories');
+                    return Text('Eroare la incarcarea categoriilor');
                   }
                   if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Text('No categories available');
+                    return Text('Nu sunt categorii valabile');
                   }
 
                   List<DropdownMenuItem<String>> categoryItems = snapshot.data!
@@ -141,7 +141,7 @@ class _UploadProductPageState extends State<UploadProductPage> {
 
                   return DropdownButton<String>(
                     isExpanded: true,
-                    hint: Text('Select Category'),
+                    hint: Text('Alege Categorie'),
                     value: _selectedCategory,
                     items: categoryItems,
                     onChanged: (String? newValue) {
@@ -156,7 +156,7 @@ class _UploadProductPageState extends State<UploadProductPage> {
               TextField(
                 controller: _titleController,
                 decoration: InputDecoration(
-                  labelText: 'Product Title',
+                  labelText: 'Nume produs',
                   counterText: '0/80',
                 ),
                 maxLength: 80,
@@ -167,7 +167,7 @@ class _UploadProductPageState extends State<UploadProductPage> {
                     child: TextField(
                       controller: _priceController,
                       decoration: InputDecoration(
-                        labelText: 'Price',
+                        labelText: 'Preț',
                       ),
                       keyboardType: TextInputType.number,
                     ),
@@ -177,7 +177,7 @@ class _UploadProductPageState extends State<UploadProductPage> {
                     child: TextField(
                       controller: _qtyController,
                       decoration: InputDecoration(
-                        labelText: 'Quantity',
+                        labelText: 'Cantitate',
                       ),
                       keyboardType: TextInputType.number,
                     ),
@@ -187,7 +187,7 @@ class _UploadProductPageState extends State<UploadProductPage> {
               TextField(
                 controller: _descriptionController,
                 decoration: InputDecoration(
-                  labelText: 'Product description',
+                  labelText: 'Descrierea produsului',
                   counterText: '0/1000',
                 ),
                 maxLength: 1000,
@@ -210,14 +210,14 @@ class _UploadProductPageState extends State<UploadProductPage> {
                           _imageBase64 = null;
                         });
                       },
-                      child: Text('Clear'),
+                      child: Text('Sterge'),
                     ),
                   ),
                   SizedBox(width: 10),
                   Expanded(
                     child: ElevatedButton(
                       onPressed: _uploadProduct,
-                      child: Text('Upload Product'),
+                      child: Text('Adauga produs'),
                     ),
                   ),
                 ],

@@ -235,7 +235,7 @@ class BottomCartSheet extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                "Delivery Fee:",
+                                "Taxă de livrare:",
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
@@ -287,7 +287,7 @@ class BottomCartSheet extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                "Discount:",
+                                "Reducere:",
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
@@ -343,7 +343,7 @@ class BottomCartSheet extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "\$${cart.totalPrice + 10}", // Total + delivery fee - discount
+                        "\$${cart.totalPrice - 10}", // Total + delivery fee - discount
                         style: TextStyle(
                           fontSize: 22,
                           color: Colors.redAccent,

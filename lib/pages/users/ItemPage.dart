@@ -170,7 +170,7 @@ class ItemPage extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          "Size: ",
+                          "Marime: ",
                           style: TextStyle(
                             fontSize: 20,
                             color: Color(0xFF475269),
@@ -180,7 +180,7 @@ class ItemPage extends StatelessWidget {
                         SizedBox(width: 10),
                         Row(
                           children: [
-                            for (int i = 5; i < 10; i++)
+                            for (int i = 39; i < 44; i++)
                               Container(
                                 height: 35,
                                 width: 35,

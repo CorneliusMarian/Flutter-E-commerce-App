@@ -1,9 +1,8 @@
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
+// import 'package:ecommerce_app/pages/users/HomePage.dart';
 import 'package:flutter/material.dart';
 // import 'package:test_project/Tools/consts.dart';
-
-import 'package:ecommerce_app/pages/users/HomePage.dart';
 
 class ChatPage extends StatefulWidget {
   final String userID;
@@ -24,27 +23,30 @@ class _ChatPageState extends State<ChatPage> {
       _selectedIndex = index;
     });
 
-    if (index == 0) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
-    } else if (index == 1) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ChatPage(
-                  userID: widget.userID,
-                )),
-      );
-    }
+    // if (index == 0) {
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //       builder: (context) => HomePage()(
+    //             userId: widget.userID,
+    //           )),
+    // );
+    // // } else if (index == 1) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => ChatPage(
+                userID: widget.userID,
+              )),
+    );
+    // }
   }
 
   final _openAi = OpenAI.instance.build(
-    token: "sk-proj-Gi5rzEWv9nJv1gfmjErzT3BlbkFJqVuzTXZkakRJY5ytEGA5",
+    token: 'sk-proj-Gi5rzEWv9nJv1gfmjErzT3BlbkFJqVuzTXZkakRJY5ytEGA5',
     baseOption: HttpSetup(
       receiveTimeout: const Duration(
-        seconds: 5,
+        seconds: 10,
       ),
     ),
     enableLog: true,
@@ -114,7 +116,6 @@ class _ChatPageState extends State<ChatPage> {
           messages: _messages,
         ),
       ),
-      // Eliminați linia cu CustomNavBar dacă nu este definit
       // bottomNavigationBar: CustomNavBar(
       //   selectedIndex: _selectedIndex,
       //   onItemTapped: _onItemTapped,
@@ -142,7 +143,7 @@ class _ChatPageState extends State<ChatPage> {
     }).toList();
 
     final request = ChatCompleteText(
-      model: GptTurbo0301ChatModel(),
+      model: Gpt4ChatModel(),
       messages: messagesHistory, // Pass the converted list
       maxToken: 200,
     );

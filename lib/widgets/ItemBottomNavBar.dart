@@ -38,7 +38,7 @@ class ItemBottomNavBar extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
-                    "Add To Cart",
+                    "Adaugă în cos",
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w500,

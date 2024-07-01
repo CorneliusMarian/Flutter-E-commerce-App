@@ -30,6 +30,8 @@ class AllItemsWidget extends StatelessWidget {
           physics: NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
             childAspectRatio: 0.75,
           ),
           itemCount: products.length,
@@ -43,8 +45,9 @@ class AllItemsWidget extends StatelessWidget {
                 ? Base64Decoder().convert(imageBase64)
                 : null;
             final image = imageBytes != null
-                ? Image.memory(imageBytes)
-                : Image.network('https://via.placeholder.com/150');
+                ? Image.memory(imageBytes, fit: BoxFit.cover)
+                : Image.network('https://via.placeholder.com/150',
+                    fit: BoxFit.cover);
 
             return GestureDetector(
               onTap: () {
@@ -80,12 +83,9 @@ class AllItemsWidget extends StatelessWidget {
                     Expanded(
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
-                        child: AspectRatio(
-                          aspectRatio: 1.0,
-                          child: FittedBox(
-                            fit: BoxFit.cover,
-                            child: image,
-                          ),
+                        child: Container(
+                          width: double.infinity,
+                          child: image,
                         ),
                       ),
                     ),
@@ -117,6 +117,7 @@ class AllItemsWidget extends StatelessWidget {
                         ),
                       ),
                     ),
+                    SizedBox(height: 5),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(

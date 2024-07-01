@@ -5,7 +5,7 @@ class AdminMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dashboard Screen'),
+        title: Text('Meniu Admin'),
         backgroundColor: Color(0xFF475269),
       ),
       body: Padding(
@@ -26,7 +26,7 @@ class AdminMenu extends StatelessWidget {
                   children: <Widget>[
                     Icon(Icons.add, size: 50.0, color: Colors.blue),
                     SizedBox(height: 10.0),
-                    Text('Add a new product', style: TextStyle(fontSize: 16.0)),
+                    Text('Adăugare produs', style: TextStyle(fontSize: 16.0)),
                   ],
                 ),
               ),
@@ -42,7 +42,7 @@ class AdminMenu extends StatelessWidget {
                   children: <Widget>[
                     Icon(Icons.shopping_cart, size: 50.0, color: Colors.blue),
                     SizedBox(height: 10.0),
-                    Text('Inspect all products',
+                    Text('Vizualizare produse',
                         style: TextStyle(fontSize: 16.0)),
                   ],
                 ),
@@ -59,7 +59,8 @@ class AdminMenu extends StatelessWidget {
                   children: <Widget>[
                     Icon(Icons.list, size: 50.0, color: Colors.blue),
                     SizedBox(height: 10.0),
-                    Text('View Orders', style: TextStyle(fontSize: 16.0)),
+                    Text('Vizualizare comenzi',
+                        style: TextStyle(fontSize: 16.0)),
                   ],
                 ),
               ),

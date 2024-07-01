@@ -47,7 +47,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 SizedBox(height: 10),
                 Center(
                   child: Text(
-                    'Welcome!',
+                    'Bine ati venit!',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -56,7 +56,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 Center(
                   child: Text(
-                    'Sign up',
+                    'Inscriere',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.grey[700],
@@ -67,7 +67,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 TextFormField(
                   controller: nameController,
                   decoration: InputDecoration(
-                    hintText: 'Enter your name',
+                    hintText: 'Nume',
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
@@ -78,7 +78,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'This field is required';
+                      return 'Acest câmp este obligatoriu';
                     }
                     return null;
                   },
@@ -87,7 +87,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 TextFormField(
                   controller: lastNameController,
                   decoration: InputDecoration(
-                    hintText: 'Last name',
+                    hintText: 'Prenume',
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
@@ -98,7 +98,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'This field is required';
+                      return 'Acest câmp este obligatoriu';
                     }
                     return null;
                   },
@@ -118,10 +118,10 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'This field is required';
+                      return 'Acest câmp este obligatoriu';
                     }
                     if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                      return 'Please enter a valid email';
+                      return 'Introduceti un  email valid';
                     }
                     return null;
                   },
@@ -131,7 +131,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   controller: passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
-                    hintText: 'Password',
+                    hintText: 'Parola',
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
@@ -142,7 +142,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'This field is required';
+                      return 'Acest câmp este obligatoriu';
                     }
                     return null;
                   },
@@ -152,7 +152,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   controller: confirmPasswordController,
                   obscureText: true,
                   decoration: InputDecoration(
-                    hintText: 'Confirm password',
+                    hintText: 'Confirmare parola',
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
@@ -163,10 +163,10 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'This field is required';
+                      return 'Acest câmp este obligatoriu';
                     }
                     if (value != passwordController.text) {
-                      return 'Passwords do not match';
+                      return 'Parolele nu corespund';
                     }
                     return null;
                   },
@@ -177,7 +177,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     Checkbox(value: true, onChanged: (value) {}),
                     Expanded(
                       child: Text(
-                        "By clicking on 'sign up' you're agreeing to the Terms of Service and Privacy Policy",
+                        "Prin apasarea butonului 'Înscriere' confirmi acceptarea Termenilor de Serviciu si Polticilor Private",
                         style: TextStyle(fontSize: 12),
                       ),
                     ),
@@ -209,7 +209,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         } catch (e) {
                           print(e);
                           ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Failed to sign up')));
+                              SnackBar(content: Text('Inscriere esuata')));
                         }
                       }
                     },
@@ -231,7 +231,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         ],
                       ),
                       child: Text(
-                        "Sign Up",
+                        "Înscriere",
                         style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.w500,

@@ -69,7 +69,7 @@ class StripeService {
           redirected: () => print('Redirected Successfully'),
           success: () => onSuccess(),
           canceled: () => onCancel(),
-          error: (e) => onError(e), // Pass the error argument
+          error: (e) => onError(e),
         );
       }
     } catch (e) {

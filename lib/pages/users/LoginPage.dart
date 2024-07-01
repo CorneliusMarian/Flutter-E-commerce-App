@@ -78,7 +78,7 @@ class LoginPage extends StatelessWidget {
                         controller: emailController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: "Enter Username",
+                          hintText: "Nume Utilizator",
                         ),
                       ),
                     ),
@@ -116,7 +116,7 @@ class LoginPage extends StatelessWidget {
                         obscureText: true,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: "Enter Password",
+                          hintText: "Parolă",
                         ),
                       ),
                     ),
@@ -130,7 +130,7 @@ class LoginPage extends StatelessWidget {
                 child: TextButton(
                   onPressed: () {},
                   child: Text(
-                    "Forget Password",
+                    "Ai uitat parola?",
                     style: TextStyle(
                       color: Color(0xFF475269),
                       fontSize: 16,
@@ -160,7 +160,7 @@ class LoginPage extends StatelessWidget {
                     ],
                   ),
                   child: Text(
-                    "Sign In",
+                    "Conectare",
                     style: TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.w500,
@@ -175,7 +175,7 @@ class LoginPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Don't have account?",
+                    "Nu ai cont?",
                     style: TextStyle(
                       color: Color(0xFF475269).withOpacity(0.8),
                       fontSize: 16,
@@ -186,7 +186,7 @@ class LoginPage extends StatelessWidget {
                       Navigator.pushNamed(context, 'SignUpPage');
                     },
                     child: Text(
-                      "Sign Up",
+                      "Inregistrare",
                       style: TextStyle(
                         color: Color(0xFF475269),
                         fontSize: 18,
