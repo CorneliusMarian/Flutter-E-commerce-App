@@ -101,7 +101,7 @@ class RowItemsWidget extends StatelessWidget {
                           Row(
                             children: [
                               AutoSizeText(
-                                "\$${productData['price']?.toString() ?? '0.0'}",
+                                "${productData['price']?.toString() ?? '0.0'} Lei",
                                 style: TextStyle(
                                   color: Colors.redAccent,
                                   fontSize: 18,

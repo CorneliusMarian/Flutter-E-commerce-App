@@ -51,19 +51,13 @@ class BottomCartSheet extends StatelessWidget {
                                           cart.items[i]['image_url'] ?? '',
                                     });
                               },
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.only(top: 10, right: 60),
-                                    height: 90,
-                                    width: 100,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFF475269),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                  Builder(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Container(
+                                  margin: EdgeInsets.only(top: 10, right: 60),
+                                  height: 90,
+                                  width: 100,
+                                  child: Builder(
                                     builder: (context) {
                                       final imageBase64 =
                                           cart.items[i]['image_url'];
@@ -71,13 +65,15 @@ class BottomCartSheet extends StatelessWidget {
                                           ? Base64Decoder().convert(imageBase64)
                                           : null;
                                       final image = imageBytes != null
-                                          ? Image.memory(imageBytes)
+                                          ? Image.memory(imageBytes,
+                                              fit: BoxFit.cover)
                                           : Image.network(
-                                              'https://via.placeholder.com/150');
+                                              'https://via.placeholder.com/150',
+                                              fit: BoxFit.cover);
                                       return image;
                                     },
                                   ),
-                                ],
+                                ),
                               ),
                             ),
                             Expanded(
@@ -201,7 +197,7 @@ class BottomCartSheet extends StatelessWidget {
                                   ),
                                   Spacer(),
                                   Text(
-                                    "\$${cart.items[i]['price'] ?? '0.0'}",
+                                    "${cart.items[i]['price'] ?? '0.0'} Lei",
                                     style: TextStyle(
                                       color: Color(0xFF475269),
                                       fontSize: 20,
@@ -243,7 +239,7 @@ class BottomCartSheet extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                "\$20",
+                                "20 Lei",
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
@@ -269,7 +265,7 @@ class BottomCartSheet extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                "\$${cart.totalPrice}",
+                                "${cart.totalPrice} Lei",
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
@@ -295,7 +291,7 @@ class BottomCartSheet extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                "-\$10",
+                                "-10 Lei",
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
@@ -343,7 +339,7 @@ class BottomCartSheet extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "\$${cart.totalPrice - 10}", // Total + delivery fee - discount
+                        "${cart.totalPrice - 10} Lei", // Total + delivery fee - discount
                         style: TextStyle(
                           fontSize: 22,
                           color: Colors.redAccent,

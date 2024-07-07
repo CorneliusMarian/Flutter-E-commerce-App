@@ -1,169 +1,131 @@
-import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
-import 'package:dash_chat_2/dash_chat_2.dart';
-// import 'package:ecommerce_app/pages/users/HomePage.dart';
 import 'package:flutter/material.dart';
-// import 'package:test_project/Tools/consts.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ChatPage extends StatefulWidget {
   final String userID;
-  const ChatPage({
-    required this.userID,
-    super.key,
-  });
+
+  const ChatPage({Key? key, required this.userID}) : super(key: key);
 
   @override
-  State<ChatPage> createState() => _ChatPageState();
+  _ChatPageState createState() => _ChatPageState();
 }
 
 class _ChatPageState extends State<ChatPage> {
-  int? _selectedIndex = 1;
-  final String userId = '';
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  final TextEditingController _controller = TextEditingController();
+  List<String> _messages = []; // Lista pentru a stoca mesajele
 
-    // if (index == 0) {
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //       builder: (context) => HomePage()(
-    //             userId: widget.userID,
-    //           )),
-    // );
-    // // } else if (index == 1) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => ChatPage(
-                userID: widget.userID,
-              )),
-    );
-    // }
-  }
-
-  final _openAi = OpenAI.instance.build(
-    token: 'sk-proj-Gi5rzEWv9nJv1gfmjErzT3BlbkFJqVuzTXZkakRJY5ytEGA5',
-    baseOption: HttpSetup(
-      receiveTimeout: const Duration(
-        seconds: 10,
-      ),
-    ),
-    enableLog: true,
-  );
-  final ChatUser _currentUser =
-      ChatUser(id: '1', firstName: 'User', lastName: 'User');
-  final ChatUser _gptChatUser =
-      ChatUser(id: '2', firstName: 'Asistentul', lastName: 'tau');
-  final List<ChatMessage> _messages = <ChatMessage>[];
-  final List<ChatUser> _typingUsers = <ChatUser>[];
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: Container(
-        height: screenHeight * 1,
-        color: Theme.of(context).colorScheme.background,
-        child: DashChat(
-          currentUser: _currentUser,
-          typingUsers: _typingUsers,
-          inputOptions: InputOptions(
-            inputTextStyle: TextStyle(
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
-            inputDecoration: InputDecoration(
-              hintText: "Scrie intrebarea ta aici...",
-              hintStyle:
-                  TextStyle(color: Theme.of(context).colorScheme.onSecondary),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Theme.of(context).colorScheme.secondary,
-                  width: 3,
-                ),
-                borderRadius: BorderRadius.circular(20.0),
-              ),
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              filled: true,
-              fillColor: Theme.of(context).colorScheme.surface,
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Theme.of(context).colorScheme.secondary,
-                  width: 3,
-                ),
-                borderRadius: BorderRadius.circular(20.0),
-              ),
-            ),
-            sendButtonBuilder: (Function send) {
-              return IconButton(
-                icon: const Icon(Icons.send),
-                color: Theme.of(context)
-                    .colorScheme
-                    .primary, // Set the color of the send icon to black
-                onPressed: () => send(),
-              );
-            },
-          ),
-          messageOptions: MessageOptions(
-            currentUserContainerColor: Theme.of(context).colorScheme.surface,
-            currentUserTextColor: Theme.of(context).colorScheme.onSurface,
-            containerColor: Theme.of(context).colorScheme.secondary,
-            textColor: Theme.of(context).colorScheme.onPrimary,
-          ),
-          onSend: (ChatMessage m) {
-            getChatResponse(m);
-          },
-          messages: _messages,
-        ),
+      appBar: AppBar(
+        title: Text('Chat cu Asistentul Virtual'),
+        backgroundColor: Colors.blue,
       ),
-      // bottomNavigationBar: CustomNavBar(
-      //   selectedIndex: _selectedIndex,
-      //   onItemTapped: _onItemTapped,
-      // ),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: ListView.builder(
+              itemCount: _messages.length,
+              reverse: true,
+              itemBuilder: (context, index) {
+                bool isSentByUser = index % 2 ==
+                    0; // Alternăm mesajele pentru a afișa cine le-a trimis
+                return ListTile(
+                  title: Align(
+                    alignment: isSentByUser
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
+                    child: Container(
+                      padding: EdgeInsets.all(8.0),
+                      color: isSentByUser ? Colors.blue[100] : Colors.grey[300],
+                      child: Text(_messages[index]),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _controller,
+              decoration: InputDecoration(
+                hintText: "Introduceți mesajul aici...",
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.send),
+                  onPressed: _sendMessage,
+                ),
+              ),
+              onSubmitted: (value) => _sendMessage(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  Future<void> getChatResponse(ChatMessage m) async {
-    setState(() {
-      _messages.insert(0, m);
-      _typingUsers.add(_gptChatUser);
+  void _sendMessage() {
+    if (_controller.text.isNotEmpty) {
+      print("Sending message: ${_controller.text}");
+      setState(() {
+        _messages.add(_controller
+            .text); // Adăugăm mesajul utilizatorului la lista de mesaje
+      });
+      _fetchResponse(_controller.text);
+      _controller.clear();
+    }
+  }
+
+  Future<void> _fetchResponse(String query) async {
+    const apiKey =
+        'sk-proj-Gi5rzEWv9nJv1gfmjErzT3BlbkFJqVuzTXZkakRJY5ytEGA5'; // Înlocuiește cu cheia ta API reală
+    const url =
+        'https://api.openai.com/v1/completions'; // URL-ul pentru GPT-3.5 completions
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $apiKey',
+    };
+
+    var prompt =
+        "Vă rog să răspundeți la întrebări legate doar despre cel mai vândut produs care de pe aplicație sunt sandalele de piele și avem produse de damă, bărbați și copii\n\nIntrebare: $query";
+
+    var body = jsonEncode({
+      'model': 'gpt-3.5-turbo-instruct', // Specifică modelul GPT-3.5
+      'prompt': prompt,
+      'max_tokens': 150,
+      'temperature': 0.7
     });
 
-    // Custom prompt that directs the AI to focus on plant-related questions in Romanian
-    String customPrompt =
-        "Vă rog să răspundeți doar la întrebări despre plante. "
-        "Dacă întrebarea nu este despre plante, formuleaza un mesaj de respingere cat mai politicos.";
+    print("Making request to URL: $url");
+    print("Headers: $headers");
+    print("Body: $body");
 
-    List<Map<String, dynamic>> messagesHistory = _messages.reversed.map((m) {
-      return {
-        "role": m.user == _currentUser ? "user" : "assistant",
-        "content":
-            "$customPrompt\n${m.text}", // Prepend the custom prompt to each message
-      };
-    }).toList();
+    try {
+      var response =
+          await http.post(Uri.parse(url), headers: headers, body: body);
+      print("Response status: ${response.statusCode}");
+      print("Response body: ${response.body}");
 
-    final request = ChatCompleteText(
-      model: Gpt4ChatModel(),
-      messages: messagesHistory, // Pass the converted list
-      maxToken: 200,
-    );
-
-    final response = await _openAi.onChatCompletion(request: request);
-    for (var element in response!.choices) {
-      if (element.message != null) {
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        var message =
+            data['choices'][0]['text'].trim(); // Extragem textul din răspuns
         setState(() {
-          _messages.insert(
-              0,
-              ChatMessage(
-                  user: _gptChatUser,
-                  createdAt: DateTime.now(),
-                  text: element.message!.content));
+          _messages.add(message); // Adăugăm răspunsul la lista de mesaje
+        });
+      } else {
+        setState(() {
+          _messages
+              .add('Error: Failed to load response: ${response.statusCode}');
         });
       }
+    } catch (e) {
+      print("Exception occurred: $e");
+      setState(() {
+        _messages.add('Error: $e');
+      });
     }
-
-    setState(() {
-      _typingUsers.remove(_gptChatUser);
-    });
   }
 }

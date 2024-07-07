@@ -87,8 +87,8 @@ class WomenProducts extends StatelessWidget {
                       Expanded(
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
-                          child: AspectRatio(
-                            aspectRatio: 1.0,
+                          child: Container(
+                            width: double.infinity,
                             child: FittedBox(
                               fit: BoxFit.cover,
                               child: image,
@@ -126,16 +126,13 @@ class WomenProducts extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: AutoSizeText(
+                        child: Text(
                           '\$${productData['price']?.toDouble() ?? 0.0}',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Colors.redAccent,
                           ),
-                          maxLines: 1,
-                          minFontSize: 12,
-                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],

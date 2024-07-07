@@ -108,15 +108,15 @@ class _CheckOutPageState extends State<CheckOutPage> {
                           "qty": 1,
                         },
                         {
-                          "productPrice": 290,
-                          "productName": "Adidasi Jordan",
+                          "productPrice": 180,
+                          "productName": "Adidasi Sport Copii",
                           "qty": 1,
                         },
                       ];
 
                       await StripeService.stripePaymentCheckout(
                         items,
-                        798,
+                        350,
                         context,
                         mounted,
                         onSuccess: () {

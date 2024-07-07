@@ -131,7 +131,7 @@ class ItemPage extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "\$$productPrice",
+                          "${productPrice} Lei",
                           style: TextStyle(
                             fontSize: 25,
                             fontWeight: FontWeight.w500,
@@ -151,7 +151,7 @@ class ItemPage extends StatelessWidget {
                         itemCount: 5,
                         itemPadding: EdgeInsets.symmetric(horizontal: 4),
                         itemBuilder: (context, _) => Icon(
-                          Icons.favorite,
+                          Icons.star,
                           color: Colors.redAccent,
                         ),
                         onRatingUpdate: (index) {},

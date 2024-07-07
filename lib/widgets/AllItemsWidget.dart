@@ -121,7 +121,7 @@ class AllItemsWidget extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        '\$${productData['price']?.toDouble() ?? 0.0}',
+                        '${productData['price']?.toDouble() ?? 0.0} Lei',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
